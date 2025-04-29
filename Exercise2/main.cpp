@@ -20,43 +20,72 @@ double tempi_heap(const std::vector<int>& input_data)
     unsigned int numIterazioni = 10;
 
     for (unsigned int i = 0; i < numIterazioni; ++i) 
-    {
-        vector<int> data = input_data; // Copia del vettore per ogni iterazione
-        // Misurazione del tempo per l'algoritmo HeapSort
-        auto start_heap = steady_clock::now();
-        HeapSort(data, 0, data.size() - 1);
-        auto stop_heap = steady_clock::now();
-        auto duration_heap = duration_cast<milliseconds>(stop_heap - start_heap);
-        tempi_heap.push_back(duration_heap.count());
-    }
+{
+    // Ogni volta creo una copia di input_data in 'data' per non modificare il vettore originale
+    vector<int> data = input_data;
+
+    // Avvio il timer per misurare il tempo di esecuzione di HeapSort
+    auto start_heap = steady_clock::now();
+
+    // Eseguo HeapSort sul vettore copiato
+    HeapSort(data, 0, data.size() - 1);
+
+    // Fermata del timer subito dopo il termine di HeapSort
+    auto stop_heap = steady_clock::now();
+
+    // Calcolo la durata dell'ordinamento come differenza tra stop e start
+    auto duration_heap = duration_cast<milliseconds>(stop_heap - start_heap);
+
+    // Salvo il tempo misurato (in millisecondi) nel vettore tempi_heap
+    tempi_heap.push_back(duration_heap.count());
+}
 
     double sum_heap = 0;
+	
+	// Sommo tutti i tempi salvati
     for (auto value : tempi_heap) {
         sum_heap += value;
     }
+	
+	// Ritorno la media dei tempi
     return sum_heap / tempi_heap.size();
 }
 
+// Funzione che calcola il tempo medio di esecuzione del BubbleSort su input_data
 double tempi_bubble(const std::vector<int>& input_data)
 {
+    // Vettore per salvare i tempi di esecuzione di ogni iterazione
     vector<unsigned int> tempi_bubble;
+
+    // Numero di volte che vogliamo ripetere la misurazione
     unsigned int numIterazioni = 10;
 
-    for (unsigned int i = 0; i < numIterazioni; ++i) // CORRETTO: unsigned int invece di int
+    // Ripeto la misurazione
+    for (unsigned int i = 0; i < numIterazioni; ++i)
     {
-        vector<int> data = input_data; // Copia del vettore per ogni iterazione
-        // Misurazione del tempo per l'algoritmo Bubble Sort
-        auto start_bubble = steady_clock::now();
-        BubbleSort(data);
-        auto stop_bubble = steady_clock::now();
+        // Creo una copia di input_data, così BubbleSort non modifica il vettore originale
+        vector<int> data = input_data;
+
+        // Misuro il tempo di esecuzione del BubbleSort
+        auto start_bubble = steady_clock::now(); // Inizio timer
+        BubbleSort(data);                        // Eseguo l'ordinamento
+        auto stop_bubble = steady_clock::now();   // Fine timer
+
+        // Calcolo la durata in millisecondi
         auto duration_bubble = duration_cast<milliseconds>(stop_bubble - start_bubble);
+
+        // Salvo la durata nell'array dei tempi
         tempi_bubble.push_back(duration_bubble.count());
     }
 
     double sum_bubble = 0;
+
+    // Sommo tutti i tempi salvati
     for (auto value : tempi_bubble) {
         sum_bubble += value;
     }
+
+    // Ritorno la media dei tempi
     return sum_bubble / tempi_bubble.size();
 }
 
@@ -83,6 +112,7 @@ int main(int argc, char **argv) {
     cout << "Dimensione dell'array: " << size << endl;
 
     // Creazione di un vettore ordinato
+	// std::iota (dalla libreria <numeric>) riempie un intervallo di elementi con numeri consecutivi, partendo da un valore iniziale che decidi io
     vector<int> data1(size);
     iota(data1.begin(), data1.end(), 0); // Riempie il vettore con valori crescenti
 
@@ -109,7 +139,8 @@ int main(int argc, char **argv) {
     cout << "La media dei tempi per l'algoritmo heap per un vettore randomico è di: " << average2_heap << " millisecondi" << endl;
     cout << "La media dei tempi per l'algoritmo bubble per un vettore randomico è di: " << average2_bubble << " millisecondi" << endl;
 
-    // Creazione di un vettore ordinato da perturbare
+    // Creazione di un vettore ordinato da perturbare. 
+	// std::iota (dalla libreria <numeric>) riempie un intervallo di elementi con numeri consecutivi, partendo da un valore iniziale che decidi io
     vector<int> data3(size);
     iota(data3.begin(), data3.end(), 0);
     // Perturbazione leggera del vettore ordinato
